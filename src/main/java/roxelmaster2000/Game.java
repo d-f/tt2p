@@ -5,7 +5,7 @@ import jgame.platform.*;
 
 import roxelmaster2000.objects.*;
 
-public class Roxelmaster2000 extends JGEngine {
+public class Game extends JGEngine {
 
     public static final int TILE_SIZE = 28;
     public static final int CANVAS_WIDTH = 40;
@@ -16,11 +16,11 @@ public class Roxelmaster2000 extends JGEngine {
 
 
     public static void main(String[] args) {
-        new Roxelmaster2000(new JGPoint(CANVAS_WIDTH*TILE_SIZE, CANVAS_HEIGHT*TILE_SIZE));
+        new Game(new JGPoint(CANVAS_WIDTH*TILE_SIZE, CANVAS_HEIGHT*TILE_SIZE));
     }
 
 
-    public Roxelmaster2000(JGPoint size) {
+    public Game(JGPoint size) {
         initEngine(size.x, size.y);
     }
 

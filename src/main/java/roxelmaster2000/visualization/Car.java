@@ -1,14 +1,13 @@
-package roxelmaster2000.objects;
+package roxelmaster2000.visualization;
 
 import jgame.JGObject;
-import roxelmaster2000.Roxelmaster2000;
 
 public class Car extends JGObject {
 
     public Car(int x, int y) {
         super("Car", true, // name
-            x * Roxelmaster2000.TILE_SIZE,
-            y * Roxelmaster2000.TILE_SIZE,
+            x * Game.TILE_SIZE,
+            y * Game.TILE_SIZE,
             1, // collision ID
             "car_l" // name of sprite or animation to use
         );
@@ -28,8 +27,8 @@ public class Car extends JGObject {
             setGraphic("car_u");
         }
 
-        this.x += (x * Roxelmaster2000.TILE_SIZE);
-        this.y += (y * Roxelmaster2000.TILE_SIZE);
+        this.x += (x * Game.TILE_SIZE);
+        this.y += (y * Game.TILE_SIZE);
     }
 }
 

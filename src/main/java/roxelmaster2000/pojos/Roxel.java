@@ -1,5 +1,7 @@
 package roxelmaster2000.pojos;
 
+import com.gigaspaces.annotation.pojo.*;
+
 import roxelmaster2000.*;
 
 /**
@@ -9,8 +11,8 @@ import roxelmaster2000.*;
  * Time: 3:55 PM
  * To change this template use File | Settings | File Templates.
  */
+@SpaceClass
 public class Roxel {
-
     public int id;
     public int x;
     public int y;
@@ -23,4 +25,45 @@ public class Roxel {
     // http://wiki.gigaspaces.com/wiki/display/XAP95/Modeling+your+data -> Embedded Model
     public Car car;
 
+    @SpaceId(autoGenerate=false)
+    @SpaceRouting
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public int getX() {
+		return x;
+	}
+
+	public void setX(int x) {
+		this.x = x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public void setY(int y) {
+		this.y = y;
+	}
+
+	public int getDirection() {
+		return direction;
+	}
+
+	public void setDirection(int direction) {
+		this.direction = direction;
+	}
+
+	public Car getCar() {
+		return car;
+	}
+
+	public void setCar(Car car) {
+		this.car = car;
+	}
 }

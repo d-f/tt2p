@@ -35,6 +35,7 @@ public class Roxel {
 		this.id = id;
 	}
 
+	@SpaceIndex
 	public int getX() {
 		return x;
 	}
@@ -42,7 +43,8 @@ public class Roxel {
 	public void setX(int x) {
 		this.x = x;
 	}
-
+	
+	@SpaceIndex
 	public int getY() {
 		return y;
 	}
@@ -59,6 +61,7 @@ public class Roxel {
 		this.direction = direction;
 	}
 
+	@SpaceIndex(path = "id")
 	public Car getCar() {
 		return car;
 	}

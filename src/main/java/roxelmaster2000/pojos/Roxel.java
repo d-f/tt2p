@@ -13,7 +13,7 @@ import roxelmaster2000.*;
  */
 @SpaceClass
 public class Roxel {
-    public int id;
+    public String id;
     public int x;
     public int y;
 
@@ -25,13 +25,13 @@ public class Roxel {
     // http://wiki.gigaspaces.com/wiki/display/XAP95/Modeling+your+data -> Embedded Model
     public Car car;
 
-    @SpaceId(autoGenerate=false)
+    @SpaceId(autoGenerate=true)
     @SpaceRouting
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

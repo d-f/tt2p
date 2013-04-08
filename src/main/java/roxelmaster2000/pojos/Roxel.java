@@ -23,7 +23,7 @@ public class Roxel {
 
     // May be an EmptyCar
     // http://wiki.gigaspaces.com/wiki/display/XAP95/Modeling+your+data -> Embedded Model
-    public Car car;
+    public AbstractCar car;
     
     @SpaceId(autoGenerate=true)
     @SpaceRouting
@@ -62,11 +62,11 @@ public class Roxel {
 	}
 
 	@SpaceIndex(path = "id")
-	public Car getCar() {
+	public AbstractCar getCar() {
 		return car;
 	}
 
-	public void setCar(Car car) {
+	public void setCar(AbstractCar car) {
 		this.car = car;
 	}
 	

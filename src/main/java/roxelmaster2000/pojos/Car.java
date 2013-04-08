@@ -9,10 +9,11 @@ import java.io.Serializable;
  * Time: 3:55 PM
  * To change this template use File | Settings | File Templates.
  */
-public class Car extends AbstractCar implements Serializable {
+
+public class Car extends AbstractCar {
 
 	@Override
-	public boolean isEmptyCar() {
+	public boolean getEmpty() {
 		return false;
 	}
 	

@@ -17,6 +17,7 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import roxelmaster2000.Direction;
+import roxelmaster2000.pojos.EmptyCar;
 import roxelmaster2000.pojos.Roxel;
 import roxelmaster2000.pojos.Structure;
 
@@ -57,6 +58,7 @@ public class SpacesUtility {
         			r.direction = direction;
         			r.x = x;
         			r.y = y;
+        			r.car = new EmptyCar();
         			gs.write(r);
         		}
         	}

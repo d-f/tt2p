@@ -1,14 +1,23 @@
 package roxelmaster2000.pojos;
 
-abstract public class AbstractCar {
-	Integer id;
+import java.io.Serializable;
+
+import com.gigaspaces.annotation.pojo.SpaceClass;
+import com.gigaspaces.annotation.pojo.SpaceId;
+import com.gigaspaces.annotation.pojo.SpaceRouting;
+
+@SpaceClass
+abstract public class AbstractCar implements Serializable {
+	String id;
 	
-	public Integer getId() {
+	@SpaceId(autoGenerate=true)
+    @SpaceRouting
+	public String getId() {
 		return id;
 	}
-	public void setId(Integer id) {
+
+	public void setId(String id) {
 		this.id = id;
 	}
-	
-	public abstract boolean isEmptyCar();
+	public abstract boolean getEmpty();
 }

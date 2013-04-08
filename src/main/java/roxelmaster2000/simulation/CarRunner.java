@@ -1,10 +1,18 @@
 package roxelmaster2000.simulation;
 
 import org.openspaces.core.GigaSpace;
+import org.openspaces.core.transaction.manager.DistributedJiniTxManagerConfigurer;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
+import com.gigaspaces.internal.client.cache.ISpaceCache;
+import com.gigaspaces.query.ISpaceQuery;
 import com.j_spaces.core.client.SQLQuery;
 
 import roxelmaster2000.Direction;
+import roxelmaster2000.pojos.Car;
+import roxelmaster2000.pojos.EmptyCar;
 import roxelmaster2000.pojos.Roxel;
 import roxelmaster2000.spaces.SpacesUtility;
 
@@ -16,6 +24,8 @@ public class CarRunner implements Runnable {
 	int height;
 	int width;
 	int dir;
+	
+	Car car;
 	
 	// x/y for starting coordinates, height/width for game field dimensions
 	public CarRunner(int x, int y, int height, int width) {
@@ -44,15 +54,19 @@ public class CarRunner implements Runnable {
 	@Override
 	public void run() {
 		GigaSpace gs = SpacesUtility.getGigaspace();
-		
 		for (;;) {
 			if (currentRoxel == null) {
 				Roxel template = new Roxel();
 				template.setX(x);
 				template.setY(y);
-				System.out.println("Query: " + template);
-				currentRoxel = gs.take(template);
+				
+				SQLQuery<Roxel> query = new SQLQuery<Roxel>(Roxel.class, "x = ? and y = ? and car.empty = true");
+				query.setParameters(x,y);
+				currentRoxel = gs.take(query);
+				currentRoxel.setCar(new Car());
 				dir = currentRoxel.getDirection();
+				gs.write(currentRoxel);
+				currentRoxel = gs.read(new SQLQuery<Roxel>(Roxel.class, "x = ? and y = ?").setParameter(1, x).setParameter(2, y));
 			}
 
 			// drive through roxel
@@ -63,14 +77,32 @@ public class CarRunner implements Runnable {
 				// Whatever
 			}
 
-			Roxel nextRoxel = gs.take(nextRoxel());
 
+			Roxel nextRoxelTemplate = nextRoxel();
+			SQLQuery<Roxel> query = new SQLQuery<Roxel>(Roxel.class, "x = ? and y = ? and car.empty = true");
+			query.setParameters(nextRoxelTemplate.getX(), nextRoxelTemplate.getY());
+
+			// enter next roxel
+			Roxel nextRoxel = null;
+			do {
+				nextRoxel = gs.take(query);
+				System.out.println(this.toString() + " try to enter next roxel");
+			} while (nextRoxel == null);
+			nextRoxel.setCar(car);
+			
+			// write current car into nextRoxel
+			gs.write(nextRoxel);
+			
 			// drive into next roxel
 			try {
 				Thread.sleep(600);
 			} catch (InterruptedException e) {
 				// Whatever
 			}
+			
+			// write empty car into current roxel
+			currentRoxel = gs.takeById(Roxel.class, currentRoxel.getId());
+			currentRoxel.setCar(new EmptyCar());
 			gs.write(currentRoxel);
 			currentRoxel = nextRoxel;
 		}

@@ -22,22 +22,7 @@ import roxelmaster2000.pojos.Structure;
 
 public class SpacesUtility {
 	public static GigaSpace getGigaspace() {
-		ProcessingUnit pu;
-		
-	    //create an admin instance to interact with the cluster
-	    Admin admin = new AdminFactory().createAdmin();
-	    //locate a grid service manager and deploy a partioned data grid with 2 primaries and one backup for each primary
-	    GridServiceManager esm = admin.getGridServiceManagers().waitForAtLeastOne();
-	    pu = esm.deploy(new SpaceDeployment("roxelmaster2000").partitioned(1, 1));
-	    
-
-		//Once your data grid has been deployed, wait for 4 instances (2 primaries and 2 backups)
-		pu.waitFor(1, 30, TimeUnit.SECONDS);
-
-		//and finally, obtain a reference to it
-		GigaSpace gigaSpace = pu.waitForSpace().getGigaSpace();
-		
-		return gigaSpace;
+		return DataGridConnectionUtility.getSpace("roxelmaster2000");
 	}
 	
 	static public void initGameField(GigaSpace gs, Structure structure) {
@@ -61,7 +46,7 @@ public class SpacesUtility {
         	for (int x = 0; x < structure.width; x++) {
         		int direction = 0;
         		if (horizontals.contains(y)) {
-        			direction |= Direction.WEST.value();
+        			direction |= Direction.EAST.value();
         		}
         		if (verticals.contains(x)) {
         			direction |= Direction.SOUTH.value();

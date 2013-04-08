@@ -14,17 +14,17 @@ import roxelmaster2000.*;
 @SpaceClass
 public class Roxel {
     public String id;
-    public int x;
-    public int y;
+    public Integer x;
+    public Integer y;
 
     // Being an int from or'd values from the Direction enum
     // int test = 0 | Direction.EAST.value() | Direction.NORTH.value();
-    public int direction;
+    public Integer direction;
 
     // May be an EmptyCar
     // http://wiki.gigaspaces.com/wiki/display/XAP95/Modeling+your+data -> Embedded Model
     public Car car;
-
+    
     @SpaceId(autoGenerate=true)
     @SpaceRouting
 	public String getId() {
@@ -36,11 +36,11 @@ public class Roxel {
 	}
 
 	@SpaceIndex
-	public int getX() {
+	public Integer getX() {
 		return x;
 	}
 
-	public void setX(int x) {
+	public void setX(Integer x) {
 		this.x = x;
 	}
 	
@@ -53,11 +53,11 @@ public class Roxel {
 		this.y = y;
 	}
 
-	public int getDirection() {
+	public Integer getDirection() {
 		return direction;
 	}
 
-	public void setDirection(int direction) {
+	public void setDirection(Integer direction) {
 		this.direction = direction;
 	}
 
@@ -68,5 +68,9 @@ public class Roxel {
 
 	public void setCar(Car car) {
 		this.car = car;
+	}
+	
+	public String toString() {
+		return "Roxel(" + id + ", " + x + ", " + y + ", " + direction + ", " + car + ")";
 	}
 }

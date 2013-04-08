@@ -14,11 +14,43 @@ public class Structure {
 	// random seed
 	public int seed;
 	
-	public int id;
+	public String id;
 	
-	@SpaceId(autoGenerate=false)
+	@SpaceId(autoGenerate=true)
     @SpaceRouting
-    public Integer getId() { return id;}
+    public String getId() { return id;}
+	
+	public void setId(String id) {  this.id = id; }
     
-    public void setId(Integer id) {  this.id = id; }
+    public int getWidth() {
+		return width;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+	public int getRoxelMeters() {
+		return roxelMeters;
+	}
+
+	public void setRoxelMeters(int roxelMeters) {
+		this.roxelMeters = roxelMeters;
+	}
+
+	public int getSeed() {
+		return seed;
+	}
+
+	public void setSeed(int seed) {
+		this.seed = seed;
+	}
 }

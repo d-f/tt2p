@@ -9,13 +9,11 @@ import java.io.Serializable;
  * Time: 3:55 PM
  * To change this template use File | Settings | File Templates.
  */
-public class Car implements Serializable {
-	Integer id;
+public class Car extends AbstractCar implements Serializable {
+
+	@Override
+	public boolean isEmptyCar() {
+		return false;
+	}
 	
-	public Integer getId() {
-		return id;
-	}
-	public void setId(Integer id) {
-		this.id = id;
-	}
 }

@@ -51,6 +51,14 @@ public class CarRunner implements Runnable {
 		}
 	}
 	
+	static public void sleep(long time) {
+		try {
+			Thread.sleep(time);
+		} catch (InterruptedException e) {
+			// Whatever
+		}
+	}
+	
 	@Override
 	public void run() {
 		GigaSpace gs = SpacesUtility.getGigaspace();
@@ -67,15 +75,12 @@ public class CarRunner implements Runnable {
 				dir = currentRoxel.getDirection();
 				gs.write(currentRoxel);
 				currentRoxel = gs.read(new SQLQuery<Roxel>(Roxel.class, "x = ? and y = ?").setParameter(1, x).setParameter(2, y));
+				car = (Car)currentRoxel.getCar();
 			}
 
 			// drive through roxel
 			System.out.println(this.toString() + " Drive through roxel: " + currentRoxel.getX() + ":" + currentRoxel.getY());
-			try {
-				Thread.sleep(1400);
-			} catch (InterruptedException e) {
-				// Whatever
-			}
+			sleep(1400);
 
 
 			Roxel nextRoxelTemplate = nextRoxel();
@@ -87,6 +92,7 @@ public class CarRunner implements Runnable {
 			do {
 				nextRoxel = gs.take(query);
 				System.out.println(this.toString() + " try to enter next roxel");
+				if (nextRoxel == null) sleep(100);
 			} while (nextRoxel == null);
 			nextRoxel.setCar(car);
 			
@@ -94,11 +100,7 @@ public class CarRunner implements Runnable {
 			gs.write(nextRoxel);
 			
 			// drive into next roxel
-			try {
-				Thread.sleep(600);
-			} catch (InterruptedException e) {
-				// Whatever
-			}
+			sleep(600);
 			
 			// write empty car into current roxel
 			currentRoxel = gs.takeById(Roxel.class, currentRoxel.getId());

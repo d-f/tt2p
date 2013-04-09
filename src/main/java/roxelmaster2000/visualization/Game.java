@@ -13,8 +13,6 @@ public class Game extends JGEngine implements Visualization {
 
     public static final int TILE_SIZE = 28;
 
-    protected String[] canvasDef;
-
     Car car;
     protected int canvasWidth;
     protected int canvasHeight;
@@ -49,27 +47,6 @@ public class Game extends JGEngine implements Visualization {
         defineMedia("assets.tbl");
 
         car = new Car(30, 3);
-
-        canvasDef = new String[canvasHeight];
-
-
-        /*StringBuilder builder = new StringBuilder(canvasWidth);
-        for(int w=0; w<canvasWidth; w++) {
-            builder.append(".");
-        }
-        String line = builder.toString();
-        for(int h=0; h<canvasHeight; h++) {
-            canvasDef[h] = line;
-        }
-
-        /*setTiles(
-            2, // tile x index
-            2, // tile y index
-            new String[]{"#####HHHHHH", "V", "#HHH", "V"}
-            // A series of tiles. Each String represents a line of tiles.
-        );*/
-        //setTiles(0, 0, canvasDef);
-
         initialized = true;
     }
 
@@ -127,14 +104,10 @@ public class Game extends JGEngine implements Visualization {
         }
 
 
-
-
         int diffX = x - prevX;
         int diffY = y - prevY;
 
 
-
-        //car.setPos(x * TILE_SIZE, y * TILE_SIZE);
         if(diffX != 0 || diffY != 0) {
             car.move(diffX, diffY);
             System.out.println("Moving " + id + " car by " + diffX + ", " + diffY);

@@ -1,5 +1,7 @@
 package roxelmaster2000.simulation;
 
+import java.util.Random;
+
 import org.openspaces.core.GigaSpace;
 import org.openspaces.core.transaction.manager.DistributedJiniTxManagerConfigurer;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -71,7 +73,10 @@ public class CarRunner implements Runnable {
 				SQLQuery<Roxel> query = new SQLQuery<Roxel>(Roxel.class, "x = ? and y = ? and car.empty = true");
 				query.setParameters(x,y);
 				currentRoxel = gs.take(query);
-				currentRoxel.setCar(new Car());
+				car = new Car();
+				Random rnd = new Random(System.nanoTime());
+				car.setId(new Long(rnd.nextLong()).toString());
+				currentRoxel.setCar(car);
 				dir = currentRoxel.getDirection();
 				gs.write(currentRoxel);
 				currentRoxel = gs.read(new SQLQuery<Roxel>(Roxel.class, "x = ? and y = ?").setParameter(1, x).setParameter(2, y));

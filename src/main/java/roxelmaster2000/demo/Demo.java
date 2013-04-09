@@ -1,5 +1,7 @@
 package roxelmaster2000.demo;
 
+import com.j_spaces.map.MapEntryFactory;
+import jgame.platform.JGEngine;
 import org.openspaces.core.GigaSpace;
 import com.j_spaces.core.client.SQLQuery;
 
@@ -8,24 +10,55 @@ import roxelmaster2000.spaces.SpacesUtility;
 import roxelmaster2000.pojos.Roxel;
 import roxelmaster2000.visualization.*;
 
-public class Demo {
+import java.awt.*;
+import java.awt.geom.Point2D;
+
+public class Demo implements KeyEventReceiver {
 
     public Visualization vis;
 
     public static final int CANVAS_WIDTH = 40;
     public static final int CANVAS_HEIGHT = 20;
+    public Roxel manualRoxel;
+    public GigaSpace gs;
 
     public static void main(String[] args) {
         new Demo();
     }
 
-    public Demo() {
-        GigaSpace gs = SpacesUtility.getGigaspace();
+    // Type is one of JGEngine.Key* constants
+    public void onKeyPress(int type) {
+        int rX = 0,
+            rY = 0;
+        if(type == JGEngine.KeyLeft) {
+            rX = -1;
+        } else if(type == JGEngine.KeyRight) {
+            rX = 1;
+        } else if(type == JGEngine.KeyUp) {
+            rY = -1;
+        } else if(type == JGEngine.KeyDown) {
+            rY = 1;
+        }
 
+        Roxel r = SpacesUtility.moveCar(gs, manualRoxel, CANVAS_WIDTH, CANVAS_HEIGHT, rX, rY);
+        if(r != null) {
+            manualRoxel = r;
+        } else {
+            System.err.println("Couldn't move manual car :(");
+        }
+    }
+
+    public Demo() {
+        System.out.println("Starting visualization...");
+        GigaSpace gs = SpacesUtility.getGigaspace();
+        this.gs = gs;
+
+
+        final Demo demo = this;
         // Start JGame in separate thread
         (new Thread() {
             public void run() {
-                vis = new Game(CANVAS_WIDTH, CANVAS_HEIGHT);
+                vis = new Game(CANVAS_WIDTH, CANVAS_HEIGHT, demo);
             }
         }).start();
 
@@ -37,9 +70,20 @@ public class Demo {
         }
 
 
+        //Point pManual = null;
         Roxel[] roxels = gs.readMultiple(new SQLQuery<Roxel>(Roxel.class, ""));
         for(Roxel r : roxels) {
+            if(r.getCar().getId() != null && r.getCar().getId().equals("manual")) {
+                //pManual = new Point(r.getX(), r.getY());
+                manualRoxel = r;
+            }
             vis.setRoadAt(r.getX(), r.getY(), r.getDirection());
+        }
+
+        if(manualRoxel == null) {
+            System.err.println("Did not find manual car :(");
+        } else {
+            System.out.println("Found manual car at x,y: " + manualRoxel.getX() + ", " + manualRoxel.getY());
         }
 
 

@@ -19,12 +19,15 @@ public class Game extends JGEngine implements Visualization {
 
     protected boolean initialized = false;
 
+    protected KeyEventReceiver ker;
+
     protected Map<String, Car> cars;
 
-    public Game(int canvasWidth, int canvasHeight) {
+    public Game(int canvasWidth, int canvasHeight, KeyEventReceiver ker) {
         this.canvasWidth = canvasWidth;
         this.canvasHeight = canvasHeight;
         this.cars = new HashMap<String, Car>();
+        this.ker = ker;
         initEngine(canvasWidth * TILE_SIZE, canvasHeight * TILE_SIZE);
     }
 
@@ -43,7 +46,7 @@ public class Game extends JGEngine implements Visualization {
 
 
     public void initGame() {
-        setFrameRate(60, 2);
+        setFrameRate(2, 2);
         defineMedia("assets.tbl");
 
         car = new Car(30, 3);
@@ -55,12 +58,16 @@ public class Game extends JGEngine implements Visualization {
 
         if(getKey(KeyLeft)) {
             car.move(-1, 0);
+            ker.onKeyPress(KeyLeft);
         } else if(getKey(KeyRight)) {
             car.move(1, 0);
+            ker.onKeyPress(KeyRight);
         } else if(getKey(KeyUp)) {
             car.move(0, -1);
+            ker.onKeyPress(KeyUp);
         } else if(getKey(KeyDown)) {
             car.move(0, 1);
+            ker.onKeyPress(KeyDown);
         }
     }
 

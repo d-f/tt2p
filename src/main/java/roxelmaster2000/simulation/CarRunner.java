@@ -65,11 +65,7 @@ public class CarRunner implements Runnable {
 	public void run() {
 		GigaSpace gs = SpacesUtility.getGigaspace();
 		for (;;) {
-			if (currentRoxel == null) {
-				Roxel template = new Roxel();
-				template.setX(x);
-				template.setY(y);
-				
+			if (currentRoxel == null) {				
 				SQLQuery<Roxel> query = new SQLQuery<Roxel>(Roxel.class, "x = ? and y = ? and car.empty = true");
 				query.setParameters(x,y);
 				currentRoxel = gs.take(query);

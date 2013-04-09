@@ -7,6 +7,7 @@ import org.openspaces.core.GigaSpace;
 import com.j_spaces.core.client.SQLQuery;
 
 import roxelmaster2000.Direction;
+import roxelmaster2000.pojos.Car;
 import roxelmaster2000.pojos.Roxel;
 import roxelmaster2000.pojos.Structure;
 import roxelmaster2000.spaces.SpacesUtility;
@@ -45,6 +46,19 @@ public class Simulation {
 				}
 				carThreads.add(new Thread(new CarRunner(rox.getX(), rox.getY(), struct.getHeight(), struct.getWidth())));
 			}
+			
+			// manual car
+			Roxel manualRoxel = roxels.remove(rnd.nextInt(roxels.size()));
+			
+			SQLQuery<Roxel> query = new SQLQuery<Roxel>(Roxel.class, "x = ? and y = ? and car.empty = true");
+			query.setParameters(manualRoxel.getX(), manualRoxel.getY());
+			manualRoxel = gs.take(query);
+			Car car = new Car();
+			car.setId("manual");
+			manualRoxel.setCar(car);
+			gs.write(manualRoxel);
+			System.out.println("Set manual car to " + manualRoxel.getX() + ":" + manualRoxel.getY());
+			
 			System.out.println("done.");
 			
 			System.out.print("Starting cars...");

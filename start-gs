@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [ "$#" -ne "1" ]; then
+    echo "Usage: start-gs <path/to/gigaspaces>"
+    exit 1
+fi
+
+GS_AGENT="$1/bin/gs-agent.sh"
+`${GS_AGENT} gsa.global.esm 1 gsa.gsc 2 gsa.global.lus 2 gsa.global.gsm 2`

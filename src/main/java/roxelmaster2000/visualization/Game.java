@@ -6,6 +6,9 @@ import jgame.platform.*;
 import roxelmaster2000.Direction;
 import roxelmaster2000.Visualization;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Game extends JGEngine implements Visualization {
 
     public static final int TILE_SIZE = 28;
@@ -18,9 +21,12 @@ public class Game extends JGEngine implements Visualization {
 
     protected boolean initialized = false;
 
+    protected Map<String, Car> cars;
+
     public Game(int canvasWidth, int canvasHeight) {
         this.canvasWidth = canvasWidth;
         this.canvasHeight = canvasHeight;
+        this.cars = new HashMap<String, Car>();
         initEngine(canvasWidth * TILE_SIZE, canvasHeight * TILE_SIZE);
     }
 
@@ -39,10 +45,10 @@ public class Game extends JGEngine implements Visualization {
 
 
     public void initGame() {
-        setFrameRate(10, 2);
+        setFrameRate(60, 2);
         defineMedia("assets.tbl");
 
-        car = new Car(5, 5);
+        car = new Car(30, 3);
 
         canvasDef = new String[canvasHeight];
 
@@ -87,14 +93,14 @@ public class Game extends JGEngine implements Visualization {
     }
 
     @Override
-    public void setRoadAt(int x, int y, Direction direction) {
+    public synchronized void setRoadAt(int x, int y, int direction) {
 
 
-        if(getTileStr(x, y) != "") {
+        if(direction == (Direction.EAST.value() | Direction.SOUTH.value())) {
             setTile(x, y, "#");
         }
 
-        else if(direction == Direction.NORTH || direction == Direction.SOUTH) {
+        else if(direction == Direction.SOUTH.value()) {
             setTile(x, y, "V");
         } else {
             setTile(x, y, "H");
@@ -103,12 +109,35 @@ public class Game extends JGEngine implements Visualization {
     }
 
     @Override
-    public void createCarAt(int id, int x, int y) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
+    public synchronized void moveCarTo(String id, int x, int y) {
+        Car car;
+        int prevX;
+        int prevY;
 
-    @Override
-    public void moveCarTo(int id, int x, int y) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        if(!cars.containsKey(id)) {
+            car = new Car(x, y);
+            prevX = x;
+            prevY = y;
+            cars.put(id, car);
+
+        } else {
+            car = cars.get(id);
+            prevX = car.getTiles().x;
+            prevY = car.getTiles().y;
+        }
+
+
+
+
+        int diffX = x - prevX;
+        int diffY = y - prevY;
+
+
+
+        //car.setPos(x * TILE_SIZE, y * TILE_SIZE);
+        if(diffX != 0 || diffY != 0) {
+            car.move(diffX, diffY);
+            System.out.println("Moving " + id + " car by " + diffX + ", " + diffY);
+        }
     }
 }

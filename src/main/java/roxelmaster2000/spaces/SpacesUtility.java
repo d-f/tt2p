@@ -68,7 +68,7 @@ public class SpacesUtility {
 
 	}
 	
-	static public void moveCar(GigaSpace gs, Roxel roxel, int width, int height, int delta_x, int delta_y) {
+	static public Roxel moveCar(GigaSpace gs, Roxel roxel, int width, int height, int delta_x, int delta_y) {
 		int newX = (roxel.getX() + delta_x) % width;
 		int newY = (roxel.getY() + delta_y) % height;
 		
@@ -85,6 +85,10 @@ public class SpacesUtility {
 			Roxel currentRoxel = gs.takeById(Roxel.class, roxel.getId());
 			currentRoxel.setCar(new EmptyCar());
 			gs.write(currentRoxel);
+			
+			return nextRoxel;
+		} else {
+			return null;
 		}
 	}
 }

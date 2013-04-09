@@ -8,5 +8,6 @@ import com.gigaspaces.annotation.pojo.SpaceRouting;
 
 @SpaceClass
 abstract public class AbstractCar implements Serializable {
+	public abstract String getID();
 	public abstract boolean getEmpty();
 }

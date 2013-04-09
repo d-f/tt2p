@@ -16,6 +16,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
+import com.j_spaces.core.client.SQLQuery;
+
 import roxelmaster2000.Direction;
 import roxelmaster2000.pojos.EmptyCar;
 import roxelmaster2000.pojos.Roxel;
@@ -64,5 +66,25 @@ public class SpacesUtility {
         	}
         }
 
+	}
+	
+	static public void moveCar(GigaSpace gs, Roxel roxel, int width, int height, int delta_x, int delta_y) {
+		int newX = (roxel.getX() + delta_x) % width;
+		int newY = (roxel.getY() + delta_y) % height;
+		
+		SQLQuery<Roxel> query = new SQLQuery<Roxel>(Roxel.class, "x = ? and y = ? and car.empty = true");
+		query.setParameters(newX, newY);
+		
+		Roxel nextRoxel = gs.take(query);
+		if (nextRoxel != null) {
+			// write car into next roxel
+			nextRoxel.setCar(roxel.getCar());
+			gs.write(nextRoxel);
+			
+			// write empty car into current roxel
+			Roxel currentRoxel = gs.takeById(Roxel.class, roxel.getId());
+			currentRoxel.setCar(new EmptyCar());
+			gs.write(currentRoxel);
+		}
 	}
 }

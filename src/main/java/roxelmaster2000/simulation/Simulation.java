@@ -13,7 +13,7 @@ import roxelmaster2000.pojos.Structure;
 import roxelmaster2000.spaces.SpacesUtility;
 
 public class Simulation {
-	public final static int NUMBER_OF_CARS = 50;
+	public final static int NUMBER_OF_CARS = 10;
 	
 	public static List<Thread> carThreads = new ArrayList<Thread>();
 	

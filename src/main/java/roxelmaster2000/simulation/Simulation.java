@@ -13,7 +13,7 @@ import roxelmaster2000.pojos.Structure;
 import roxelmaster2000.spaces.SpacesUtility;
 
 public class Simulation {
-	public final static int NUMBER_OF_CARS = 10;
+	public final static int NUMBER_OF_CARS = 50;
 	
 	public static List<Thread> carThreads = new ArrayList<Thread>();
 	
@@ -35,12 +35,11 @@ public class Simulation {
 			ArrayList<Roxel> roxels = new ArrayList<Roxel>(Arrays.asList(gs.readMultiple(new SQLQuery<Roxel>(Roxel.class, ""))));
 			System.out.println("done.");
 			
-			
 			System.out.print("Preparing cars...");
 			Random rnd = new Random(struct.seed);
 			for (int n = 0; n < NUMBER_OF_CARS; n++) {
 				Roxel rox = roxels.remove(rnd.nextInt(roxels.size()));
-				if ((rox.getDirection() & Direction.EAST.value() & Direction.SOUTH.value()) != 0) {
+				if (rox.getDirection() == (Direction.SOUTH.value() & Direction.EAST.value())) {
 					n--;
 					continue;
 				}

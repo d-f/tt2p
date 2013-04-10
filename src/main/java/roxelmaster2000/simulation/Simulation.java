@@ -39,7 +39,7 @@ public class Simulation {
 			Random rnd = new Random(struct.seed);
 			for (int n = 0; n < NUMBER_OF_CARS; n++) {
 				Roxel rox = roxels.remove(rnd.nextInt(roxels.size()));
-				if (rox.getDirection() == (Direction.SOUTH.value() & Direction.EAST.value())) {
+				if (rox.getDirection() == 10) {
 					n--;
 					continue;
 				}

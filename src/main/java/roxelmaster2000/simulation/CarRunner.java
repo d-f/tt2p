@@ -29,6 +29,12 @@ public class CarRunner implements Runnable {
 	
 	Car car;
 	
+	static int ctr = 0;
+	
+	synchronized private int getCounter() {
+		return ctr++;
+	}
+	
 	// x/y for starting coordinates, height/width for game field dimensions
 	public CarRunner(int x, int y, int height, int width) {
 		this.x = x;
@@ -70,10 +76,10 @@ public class CarRunner implements Runnable {
 				query.setParameters(x,y);
 				currentRoxel = gs.take(query);
 				car = new Car();
-				Random rnd = new Random(System.nanoTime());
-				car.setId(new Long(rnd.nextLong()).toString());
+				car.setId(new Long(getCounter()).toString());
 				currentRoxel.setCar(car);
 				dir = currentRoxel.getDirection();
+				System.out.println("Roxel Direction: " + currentRoxel.getDirection());
 				car.setDirection(Direction.valueOf(dir));
 				System.out.println("Direction: " + car.getDirection());
 				gs.write(currentRoxel);

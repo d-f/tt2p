@@ -8,6 +8,18 @@ public enum Direction {
     Direction(int i) {
         this.code = i;
     }
+    
+    static public Direction valueOf(int i) {
+    	if ((i & Direction.EAST.value()) != 0) {
+    		return Direction.EAST;
+    	} else if ((i & Direction.WEST.value()) != 0) {
+    		return Direction.WEST;
+    	} else if ((i & Direction.SOUTH.value()) != 0) {
+    		return Direction.SOUTH;
+    	} else {
+    		return Direction.NORTH;
+    	}
+    }
 
     public int value() {
         return code;

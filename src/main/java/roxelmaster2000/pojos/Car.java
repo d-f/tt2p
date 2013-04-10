@@ -2,6 +2,8 @@ package roxelmaster2000.pojos;
 
 import java.io.Serializable;
 
+import roxelmaster2000.Direction;
+
 import com.gigaspaces.annotation.pojo.SpaceId;
 import com.gigaspaces.annotation.pojo.SpaceRouting;
 
@@ -15,7 +17,16 @@ import com.gigaspaces.annotation.pojo.SpaceRouting;
 
 public class Car extends AbstractCar {
 	String id;
+	Direction direction;
 	
+	public Direction getDirection() {
+		return direction;
+	}
+
+	public void setDirection(Direction direction) {
+		this.direction = direction;
+	}
+
 	@SpaceId(autoGenerate=true)
     @SpaceRouting
 	public String getId() {

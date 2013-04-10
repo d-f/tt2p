@@ -19,6 +19,7 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 import com.j_spaces.core.client.SQLQuery;
 
 import roxelmaster2000.Direction;
+import roxelmaster2000.pojos.Car;
 import roxelmaster2000.pojos.EmptyCar;
 import roxelmaster2000.pojos.Roxel;
 import roxelmaster2000.pojos.Structure;
@@ -78,7 +79,9 @@ public class SpacesUtility {
 		Roxel nextRoxel = gs.take(query);
 		if (nextRoxel != null) {
 			// write car into next roxel
-			nextRoxel.setCar(roxel.getCar());
+			Car c = (Car) roxel.getCar();
+			c.setDirection(Direction.valueOf(nextRoxel.direction));
+			nextRoxel.setCar(c);
 			gs.write(nextRoxel);
 			
 			// write empty car into current roxel

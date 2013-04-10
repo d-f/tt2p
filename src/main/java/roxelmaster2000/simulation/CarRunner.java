@@ -74,6 +74,8 @@ public class CarRunner implements Runnable {
 				car.setId(new Long(rnd.nextLong()).toString());
 				currentRoxel.setCar(car);
 				dir = currentRoxel.getDirection();
+				car.setDirection(Direction.valueOf(dir));
+				System.out.println("Direction: " + car.getDirection());
 				gs.write(currentRoxel);
 				currentRoxel = gs.read(new SQLQuery<Roxel>(Roxel.class, "x = ? and y = ?").setParameter(1, x).setParameter(2, y));
 				car = (Car)currentRoxel.getCar();

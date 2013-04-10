@@ -55,6 +55,7 @@ public class Simulation {
 			manualRoxel = gs.take(query);
 			Car car = new Car();
 			car.setId("manual");
+			car.setDirection(Direction.valueOf(manualRoxel.getDirection()));
 			manualRoxel.setCar(car);
 			gs.write(manualRoxel);
 			System.out.println("Set manual car to " + manualRoxel.getX() + ":" + manualRoxel.getY());

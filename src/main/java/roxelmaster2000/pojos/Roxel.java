@@ -20,8 +20,19 @@ public class Roxel {
     // Being an int from or'd values from the Direction enum
     // int test = 0 | Direction.EAST.value() | Direction.NORTH.value();
     public Integer direction;
+    
+    // Allowed driving direction, cars return TODECIDE on junctions so traffic lights can decide
+    public DrivingDirection drivingDirection;
 
-    // May be an EmptyCar
+    public DrivingDirection getDrivingDirection() {
+		return drivingDirection;
+	}
+
+	public void setDrivingDirection(DrivingDirection drivingDirection) {
+		this.drivingDirection = drivingDirection;
+	}
+
+	// May be an EmptyCar
     // http://wiki.gigaspaces.com/wiki/display/XAP95/Modeling+your+data -> Embedded Model
     public AbstractCar car;
     

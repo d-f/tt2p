@@ -13,6 +13,7 @@ import com.gigaspaces.query.ISpaceQuery;
 import com.j_spaces.core.client.SQLQuery;
 
 import roxelmaster2000.Direction;
+import roxelmaster2000.DrivingDirection;
 import roxelmaster2000.pojos.Car;
 import roxelmaster2000.pojos.EmptyCar;
 import roxelmaster2000.pojos.Roxel;
@@ -93,8 +94,8 @@ public class CarRunner implements Runnable {
 
 
 			Roxel nextRoxelTemplate = nextRoxel();
-			SQLQuery<Roxel> query = new SQLQuery<Roxel>(Roxel.class, "x = ? and y = ? and car.empty = true");
-			query.setParameters(nextRoxelTemplate.getX(), nextRoxelTemplate.getY());
+			SQLQuery<Roxel> query = new SQLQuery<Roxel>(Roxel.class, "x = ? and y = ? and car.empty = true and drivingDirection = ?");
+			query.setParameters(nextRoxelTemplate.getX(), nextRoxelTemplate.getY(), dir == Direction.SOUTH.value() ? DrivingDirection.SOUTH : DrivingDirection.EAST);
 
 			// enter next roxel
 			Roxel nextRoxel = null;
@@ -114,6 +115,9 @@ public class CarRunner implements Runnable {
 			// write empty car into current roxel
 			currentRoxel = gs.takeById(Roxel.class, currentRoxel.getId());
 			currentRoxel.setCar(new EmptyCar());
+			if (currentRoxel.getDirection() == (Direction.SOUTH.value() & Direction.EAST.value())) {
+				currentRoxel.setDrivingDirection(DrivingDirection.TODECIDE);
+			}
 			gs.write(currentRoxel);
 			currentRoxel = nextRoxel;
 		}

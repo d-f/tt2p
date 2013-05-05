@@ -19,6 +19,7 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 import com.j_spaces.core.client.SQLQuery;
 
 import roxelmaster2000.Direction;
+import roxelmaster2000.DrivingDirection;
 import roxelmaster2000.pojos.Car;
 import roxelmaster2000.pojos.EmptyCar;
 import roxelmaster2000.pojos.Roxel;
@@ -32,8 +33,8 @@ public class SpacesUtility {
 	static public void initGameField(GigaSpace gs, Structure structure) {
 		gs.write(structure);
 		
-		final int H_ROADS = 10;
-		final int V_ROADS = 10;
+		final int H_ROADS = 5;
+		final int V_ROADS = 5;
 		
         Random rand = new Random(structure.seed);
         Set<Integer> horizontals = new HashSet<Integer>();
@@ -49,16 +50,20 @@ public class SpacesUtility {
         for (int y = 0; y < structure.height; y++) {
         	for (int x = 0; x < structure.width; x++) {
         		int direction = 0;
+        		DrivingDirection drivingDir = DrivingDirection.TODECIDE;
         		if (horizontals.contains(y)) {
         			direction |= Direction.EAST.value();
+        			drivingDir = DrivingDirection.EAST;
         		}
         		if (verticals.contains(x)) {
         			direction |= Direction.SOUTH.value();
+        			drivingDir = DrivingDirection.SOUTH;
         		}
         		
         		if (direction != 0) {
         			Roxel r = new Roxel();
         			r.direction = direction;
+        			r.drivingDirection = drivingDir;
         			r.x = x;
         			r.y = y;
         			r.car = new EmptyCar();

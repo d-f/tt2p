@@ -67,6 +67,7 @@ public class SpacesUtility {
         			r.x = x;
         			r.y = y;
         			r.car = new EmptyCar();
+        			r.setId(Integer.toString(r.hashCode()));
         			gs.write(r);
         		}
         	}

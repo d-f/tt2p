@@ -1,6 +1,11 @@
 package roxelmaster2000;
 
-public enum Direction {
+import java.io.Serializable;
+
+import com.gigaspaces.annotation.pojo.SpaceClass;
+
+@SpaceClass
+public enum Direction implements  Serializable {
     NORTH(1), SOUTH(2), WEST(4), EAST(8);
 
     private int code;

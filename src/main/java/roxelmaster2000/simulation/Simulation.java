@@ -1,7 +1,12 @@
 package roxelmaster2000.simulation;
 
+import java.io.File;
 import java.util.*;
 
+import org.openspaces.admin.Admin;
+import org.openspaces.admin.AdminFactory;
+import org.openspaces.admin.gsm.GridServiceManager;
+import org.openspaces.admin.pu.ProcessingUnitDeployment;
 import org.openspaces.core.GigaSpace;
 
 import com.j_spaces.core.client.SQLQuery;
@@ -10,6 +15,7 @@ import roxelmaster2000.Direction;
 import roxelmaster2000.pojos.Car;
 import roxelmaster2000.pojos.Roxel;
 import roxelmaster2000.pojos.Structure;
+import roxelmaster2000.spaces.DataGridConnectionUtility;
 import roxelmaster2000.spaces.SpacesUtility;
 
 public class Simulation {
@@ -58,6 +64,18 @@ public class Simulation {
 			manualRoxel.setCar(car);
 			gs.write(manualRoxel);
 			System.out.println("Set manual car to " + manualRoxel.getX() + ":" + manualRoxel.getY());
+			
+			System.out.println("done.");
+			
+			System.out.println("Starting traffic light PU...");
+			
+ 			/*
+			GridServiceManager gsm = DataGridConnectionUtility.getGSM("roxelmaster2000");
+			gsm.deploy(new ProcessingUnitDeployment(new File("TrafficLightListener")));
+			*/
+			
+			Thread trafficLights = new Thread(new TrafficLight(gs, struct));
+			trafficLights.start();
 			
 			System.out.println("done.");
 			

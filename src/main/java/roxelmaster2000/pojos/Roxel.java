@@ -1,5 +1,7 @@
 package roxelmaster2000.pojos;
 
+import java.io.Serializable;
+
 import com.gigaspaces.annotation.pojo.*;
 
 import roxelmaster2000.*;
@@ -12,7 +14,7 @@ import roxelmaster2000.*;
  * To change this template use File | Settings | File Templates.
  */
 @SpaceClass
-public class Roxel {
+public class Roxel implements Serializable {
     public String id;
     public Integer x;
     public Integer y;
@@ -23,7 +25,12 @@ public class Roxel {
     
     // Allowed driving direction, cars return TODECIDE on junctions so traffic lights can decide
     public DrivingDirection drivingDirection;
+    
+	public Roxel() {
+		super();
+	}
 
+    @SpaceIndex
     public DrivingDirection getDrivingDirection() {
 		return drivingDirection;
 	}
@@ -36,7 +43,7 @@ public class Roxel {
     // http://wiki.gigaspaces.com/wiki/display/XAP95/Modeling+your+data -> Embedded Model
     public AbstractCar car;
     
-    @SpaceId(autoGenerate=true)
+    @SpaceId//(autoGenerate=true)
     @SpaceRouting
 	public String getId() {
 		return id;
@@ -56,14 +63,15 @@ public class Roxel {
 	}
 	
 	@SpaceIndex
-	public int getY() {
+	public Integer getY() {
 		return y;
 	}
 
-	public void setY(int y) {
+	public void setY(Integer y) {
 		this.y = y;
 	}
 
+	@SpaceIndex
 	public Integer getDirection() {
 		return direction;
 	}
@@ -82,6 +90,6 @@ public class Roxel {
 	}
 	
 	public String toString() {
-		return "Roxel(" + id + ", " + x + ", " + y + ", " + direction + ", " + car + ")";
+		return "Roxel(" + id + ", " + x + ", " + y + ", " + direction + ", " + drivingDirection + ", " + car + ")";
 	}
 }

@@ -29,7 +29,7 @@ public final class DataGridConnectionUtility {
     Logger log = Logger.getLogger(this.getClass().getName());
 
     static DataGridConnectionUtility instance = new DataGridConnectionUtility();
-
+    
     private DataGridConnectionUtility() {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
@@ -69,7 +69,8 @@ public final class DataGridConnectionUtility {
 	                space = configurer.space();
 	            }
 	            LocalCacheSpaceConfigurer cacheConfigurer = new LocalCacheSpaceConfigurer(space);
-	            gigaspace = new GigaSpaceConfigurer(cacheConfigurer.space()).gigaSpace();
+	            gigaspace = new GigaSpaceConfigurer(cacheConfigurer.space())
+	            	.gigaSpace();
 	            instance.gigaSpaceMap.put(spaceName, gigaspace);
 	        }
 	        return gigaspace;
@@ -79,5 +80,18 @@ public final class DataGridConnectionUtility {
 
     public static GigaSpace getSpace(String spaceName) {
         return getSpace(spaceName, 1, 1);
+    }
+    
+    public static GridServiceManager getGSM(String spaceName) {
+        GridServiceManager gsm = null;
+        if (gsm == null) {
+            UrlSpaceConfigurer configurer = new UrlSpaceConfigurer("jini:/*/*/" + spaceName);
+
+            Admin admin = new AdminFactory().createAdmin();
+            gsm = admin.getGridServiceManagers().waitForAtLeastOne();
+
+            admin.close();
+        }
+        return gsm;
     }
 }

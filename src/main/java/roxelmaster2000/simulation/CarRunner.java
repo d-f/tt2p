@@ -90,7 +90,7 @@ public class CarRunner implements Runnable {
 
 			// drive through roxel
 			System.out.println(this.toString() + " Drive through roxel: " + currentRoxel.getX() + ":" + currentRoxel.getY());
-			sleep(1400);
+			sleep(140);
 
 
 			Roxel nextRoxelTemplate = nextRoxel();
@@ -101,8 +101,8 @@ public class CarRunner implements Runnable {
 			Roxel nextRoxel = null;
 			do {
 				nextRoxel = gs.take(query);
-				System.out.println(this.toString() + " try to enter next roxel");
-				if (nextRoxel == null) sleep(100);
+				//System.out.println(this.toString() + " try to enter next roxel");
+				if (nextRoxel == null) sleep(10);
 			} while (nextRoxel == null);
 			nextRoxel.setCar(car);
 			
@@ -110,15 +110,15 @@ public class CarRunner implements Runnable {
 			gs.write(nextRoxel);
 			
 			// drive into next roxel
-			sleep(600);
+			sleep(60);
 			
 			// write empty car into current roxel
 			currentRoxel = gs.takeById(Roxel.class, currentRoxel.getId());
 			currentRoxel.setCar(new EmptyCar());
-			if (currentRoxel.getDirection() == (Direction.SOUTH.value() & Direction.EAST.value())) {
+			if (currentRoxel.getDirection() == 10) {
 				currentRoxel.setDrivingDirection(DrivingDirection.TODECIDE);
 			}
-			gs.write(currentRoxel);
+			gs.write(currentRoxel);			
 			currentRoxel = nextRoxel;
 		}
 	}

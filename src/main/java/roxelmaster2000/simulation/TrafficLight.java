@@ -24,66 +24,48 @@ public class TrafficLight implements Runnable {
 		foresight = 1;
 	}
 	
-	public int carsComingFromNorth(Roxel r) {
-		int cars = 0;
-		Roxel template = new Roxel();
-		template.setX(r.getX());
-		for (int n = 1; n <= foresight; n++) {
-			template.setY((r.getY() + struct.height - n) % struct.height);
-			Roxel queueRox = gs.read(template);
-			if (queueRox == null) {
-				System.out.println("BUUUU");
-				System.out.println("r = " + r + ", template = " + template);
-			}
-			if (queueRox != null && 
-					queueRox.getCar().getEmpty() == false) {
-				Car c = (Car)queueRox.getCar();
-				if (c != null && (c.getDirection().value() == Direction.SOUTH.value())) {
-					cars++;
-				}
-			}
-		}
-		
-		return cars;
-	}
-	
-	public int carsComingFromWest(Roxel r) {
-		int cars = 0;
-		Roxel template = new Roxel();
-		template.setY(r.getY());
-		for (int n = 1; n <= foresight; n++) {
-			template.setX((r.getX() + struct.width - n) % struct.width);
-			Roxel queueRox = gs.read(template);
-			if (queueRox == null) {
-				System.out.println("BUUUU");
-			}
-			if (queueRox != null && 
-					(queueRox.getCar().getEmpty() == false)) {
-				Car c = (Car)queueRox.getCar();
-				if (c != null && (c.getDirection().value() == Direction.EAST.value())) {
-					cars++;
-				}
-			}
-		}
-		
-		return cars;
-	}
-	
 	public Roxel eventListener(Roxel r) {
-		int carQueueLenNorth = carsComingFromNorth(r);
-		int carQueueLenWest = carsComingFromWest(r);
+//		if (carQueueLenNorth > carQueueLenWest) {
+//			r.setDrivingDirection(Direction.EAST.value());
+//		} else if (carQueueLenNorth < carQueueLenWest) {
+//			r.setDrivingDirection(Direction.SOUTH.value());
+//		} else {
+//			r.setDrivingDirection(rnd.nextBoolean() ? Direction.SOUTH.value() : Direction.EAST.value());
+//		}
+		Roxel leftTemplate = new Roxel();
+		leftTemplate.setX((r.getX() + struct.width - 1) % struct.width);
+		leftTemplate.setY(r.getY());
 		
-		if (carQueueLenNorth == 0 && carQueueLenWest == 0) {
-			return r;
+		Roxel aboveTemplate = new Roxel();
+		aboveTemplate.setX(r.getX());
+		aboveTemplate.setY((r.getY() + struct.height - 1) % struct.height);
+		
+		Roxel above = null;
+		Roxel left = null;
+		
+		while (above == null) {
+			above = gs.read(aboveTemplate);
+			CarRunner.sleep(33);
+			if (above == null) {
+				System.out.println("Missing roxel, above " + r + ": " + aboveTemplate);
+			}
 		}
 		
-		if (carQueueLenNorth > carQueueLenWest) {
+		while (left == null) {
+			left = gs.read(leftTemplate);
+			CarRunner.sleep(33);
+			if (left == null) {
+				System.out.println("Missing roxel, left of " + r + ": " + leftTemplate);
+			}
+		}
+		
+		if (left.car.getEmpty() == false) {
 			r.setDrivingDirection(Direction.EAST.value());
-		} else if (carQueueLenNorth < carQueueLenWest) {
+		} else if (above.car.getEmpty() == false) {
 			r.setDrivingDirection(Direction.SOUTH.value());
-		} else {
-			r.setDrivingDirection(rnd.nextBoolean() ? Direction.SOUTH.value() : Direction.EAST.value());
 		}
+		
+		//r.setDrivingDirection(rnd.nextBoolean() ? Direction.SOUTH.value() : Direction.EAST.value());
 		System.out.println("Write back: " + r);
 		return r;
 	}
@@ -98,12 +80,12 @@ public class TrafficLight implements Runnable {
 		for (;;) {
 			Roxel result = null;
 			do {
+				CarRunner.sleep(3);
 				result = gs.take(template);
 				if (result == null) {
 					CarRunner.sleep(100);
 				}
 			} while (result == null);
-			System.out.println("YAY: " + result.getDrivingDirection());
 			
 			gs.write(eventListener(result));
 		}

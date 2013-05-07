@@ -56,6 +56,9 @@ public class SpacesUtility {
         		if (verticals.contains(x)) {
         			direction |= Direction.SOUTH.value();
         		}
+        		if (direction != 10) {
+        			drivingDir = direction;
+        		}
         		
         		if (direction != 0) {
         			Roxel r = new Roxel();
@@ -65,6 +68,7 @@ public class SpacesUtility {
         			r.y = y;
         			r.car = new EmptyCar();
         			r.setId(Integer.toString(r.hashCode()));
+        			System.out.println("New Roxel: " + r);
         			gs.write(r);
         		}
         	}

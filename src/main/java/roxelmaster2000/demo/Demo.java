@@ -40,6 +40,7 @@ public class Demo implements KeyEventReceiver {
             rY = 1;
         }
 
+        System.out.println("===> Trying to move car to " + rX + ", " + rY);
         Roxel r = SpacesUtility.moveCar(gs, manualRoxel, CANVAS_WIDTH, CANVAS_HEIGHT, rX, rY);
         if(r != null) {
             manualRoxel = r;
@@ -77,7 +78,7 @@ public class Demo implements KeyEventReceiver {
                 //pManual = new Point(r.getX(), r.getY());
                 manualRoxel = r;
             }
-            vis.setRoadAt(r.getX(), r.getY(), r.getDirection());
+            vis.setRoadAt(r.getX(), r.getY(), r.getDirection(), r);
         }
 
         if(manualRoxel == null) {
@@ -95,8 +96,13 @@ public class Demo implements KeyEventReceiver {
             System.out.println("About to draw " + roxel.length + " Roxels!");
             int nullCars = 0;
             for(Roxel r : roxel) {
+                // Kreuzung
+                if(r.getDirection() == (Direction.EAST.value() | Direction.SOUTH.value())) {
+                    vis.updateTrafficLight(r);
+                }
+
                 if(r.getCar() == null || r.getCar().getEmpty()) { nullCars++; continue; }
-                vis.moveCarTo(r.car.getId(), r.getX(), r.getY());
+                vis.moveCarTo(r.car.getId(), r.getX(), r.getY(), r);
             }
             System.out.println("There where " + nullCars + " nullCars");
 

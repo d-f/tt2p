@@ -1,0 +1,3 @@
+#!/bin/bash
+
+sbt 'run-main roxelmaster2000.simulation.Simulation'

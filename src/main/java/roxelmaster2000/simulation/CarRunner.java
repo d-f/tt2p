@@ -113,6 +113,7 @@ public class CarRunner implements Runnable {
 				if (nextRoxel.getDrivingDirection() != car.getDirection().value()) {
 					System.out.println("Car[id=" + car.getId() + "] " + "wrong direction. expected " + car.getDirection().value() + " but was " + nextRoxel.getDrivingDirection());
 					gs.write(nextRoxel);
+					sleep(333);
 					continue;
 				}
 				break;

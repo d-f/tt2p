@@ -8,7 +8,6 @@ import org.openspaces.core.GigaSpace;
 import com.j_spaces.core.client.SQLQuery;
 
 import roxelmaster2000.Direction;
-import roxelmaster2000.DrivingDirection;
 import roxelmaster2000.pojos.Car;
 import roxelmaster2000.pojos.Roxel;
 import roxelmaster2000.pojos.Structure;
@@ -32,9 +31,10 @@ public class TrafficLight implements Runnable {
 		for (int n = 1; n <= foresight; n++) {
 			template.setY((r.getY() + struct.height - n) % struct.height);
 			Roxel queueRox = gs.read(template);
-			if (queueRox.getCar().getEmpty() == false) {
+			if (queueRox != null && 
+					queueRox.getCar().getEmpty() == false) {
 				Car c = (Car)queueRox.getCar();
-				if (c != null && (c.getDirection().equals(Direction.SOUTH))) {
+				if (c != null && (c.getDirection().value() == Direction.SOUTH.value())) {
 					cars++;
 				}
 			}
@@ -50,9 +50,10 @@ public class TrafficLight implements Runnable {
 		for (int n = 1; n <= foresight; n++) {
 			template.setX((r.getX() + struct.width - n) % struct.width);
 			Roxel queueRox = gs.read(template);
-			if (queueRox.getCar().getEmpty() == false) {
+			if (queueRox != null && 
+					(queueRox.getCar().getEmpty() == false)) {
 				Car c = (Car)queueRox.getCar();
-				if (c != null && (c.getDirection().equals(Direction.EAST))) {
+				if (c != null && (c.getDirection().value() == Direction.EAST.value())) {
 					cars++;
 				}
 			}
@@ -67,11 +68,11 @@ public class TrafficLight implements Runnable {
 		int carQueueLenWest = carsComingFromWest(r);
 		
 		if (carQueueLenNorth > carQueueLenWest) {
-			r.setDrivingDirection(DrivingDirection.SOUTH);
+			r.setDrivingDirection(Direction.SOUTH.value());
 		} else if (carQueueLenNorth < carQueueLenWest) {
-			r.setDrivingDirection(DrivingDirection.EAST);
+			r.setDrivingDirection(Direction.EAST.value());
 		} else {
-			r.setDrivingDirection(rnd.nextBoolean() ? DrivingDirection.SOUTH : DrivingDirection.EAST);
+			r.setDrivingDirection(rnd.nextBoolean() ? Direction.SOUTH.value() : Direction.EAST.value());
 		}
 		System.out.println("Write back: " + r);
 		return r;
@@ -82,7 +83,7 @@ public class TrafficLight implements Runnable {
 	@Override
 	public void run() {
 		Roxel template = new Roxel();
-        template.drivingDirection = DrivingDirection.TODECIDE;
+        template.drivingDirection = Direction.TODECIDE.value();
         
 		for (;;) {
 			Roxel result = null;

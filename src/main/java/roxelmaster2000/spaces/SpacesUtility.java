@@ -19,7 +19,6 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 import com.j_spaces.core.client.SQLQuery;
 
 import roxelmaster2000.Direction;
-import roxelmaster2000.DrivingDirection;
 import roxelmaster2000.pojos.Car;
 import roxelmaster2000.pojos.EmptyCar;
 import roxelmaster2000.pojos.Roxel;
@@ -50,14 +49,12 @@ public class SpacesUtility {
         for (int y = 0; y < structure.height; y++) {
         	for (int x = 0; x < structure.width; x++) {
         		int direction = 0;
-        		DrivingDirection drivingDir = DrivingDirection.TODECIDE;
+        		int drivingDir = Direction.TODECIDE.value();
         		if (horizontals.contains(y)) {
         			direction |= Direction.EAST.value();
-        			drivingDir = DrivingDirection.EAST;
         		}
         		if (verticals.contains(x)) {
         			direction |= Direction.SOUTH.value();
-        			drivingDir = DrivingDirection.SOUTH;
         		}
         		
         		if (direction != 0) {

@@ -6,7 +6,7 @@ import com.gigaspaces.annotation.pojo.SpaceClass;
 
 @SpaceClass
 public enum Direction implements  Serializable {
-    NORTH(1), SOUTH(2), WEST(4), EAST(8);
+    NORTH(1), SOUTH(2), WEST(4), EAST(8), TODECIDE(16);
 
     private int code;
 
@@ -21,8 +21,10 @@ public enum Direction implements  Serializable {
     		return Direction.WEST;
     	} else if ((i & Direction.SOUTH.value()) != 0) {
     		return Direction.SOUTH;
-    	} else {
+    	} else if ((i & Direction.NORTH.value()) != 0){
     		return Direction.NORTH;
+    	} else {
+    		return Direction.TODECIDE;
     	}
     }
 

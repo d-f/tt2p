@@ -13,7 +13,6 @@ import com.gigaspaces.query.ISpaceQuery;
 import com.j_spaces.core.client.SQLQuery;
 
 import roxelmaster2000.Direction;
-import roxelmaster2000.DrivingDirection;
 import roxelmaster2000.pojos.Car;
 import roxelmaster2000.pojos.EmptyCar;
 import roxelmaster2000.pojos.Roxel;
@@ -75,7 +74,11 @@ public class CarRunner implements Runnable {
 			if (currentRoxel == null) {				
 				SQLQuery<Roxel> query = new SQLQuery<Roxel>(Roxel.class, "x = ? and y = ? and car.empty = true");
 				query.setParameters(x,y);
-				currentRoxel = gs.take(query);
+				do {
+					currentRoxel = gs.take(query);
+					sleep(100);
+				} while (currentRoxel == null);
+				
 				car = new Car();
 				car.setId(new Long(getCounter()).toString());
 				currentRoxel.setCar(car);
@@ -89,21 +92,32 @@ public class CarRunner implements Runnable {
 			}
 
 			// drive through roxel
-			System.out.println(this.toString() + " Drive through roxel: " + currentRoxel.getX() + ":" + currentRoxel.getY());
+			System.out.println("Car[id=" + car.getId() + "] " + " Drive through roxel: " + currentRoxel.getX() + ":" + currentRoxel.getY());
 			sleep(140);
 
 
 			Roxel nextRoxelTemplate = nextRoxel();
-			SQLQuery<Roxel> query = new SQLQuery<Roxel>(Roxel.class, "x = ? and y = ? and car.empty = true and drivingDirection = ?");
-			query.setParameters(nextRoxelTemplate.getX(), nextRoxelTemplate.getY(), dir == Direction.SOUTH.value() ? DrivingDirection.SOUTH : DrivingDirection.EAST);
+			SQLQuery<Roxel> query = new SQLQuery<Roxel>(Roxel.class, "x = ? and y = ? and car.empty = true");
+			query.setParameters(nextRoxelTemplate.getX(), nextRoxelTemplate.getY());
 
 			// enter next roxel
-			Roxel nextRoxel = null;
-			do {
-				nextRoxel = gs.take(query);
-				//System.out.println(this.toString() + " try to enter next roxel");
-				if (nextRoxel == null) sleep(10);
-			} while (nextRoxel == null);
+			Roxel nextRoxel;
+			for (;;) {
+				nextRoxel = null;
+				do {
+					nextRoxel = gs.take(query);
+					//System.out.println(this.toString() + " try to enter next roxel");
+					if (nextRoxel == null) sleep(10);
+				} while (nextRoxel == null);
+				
+				if (nextRoxel.getDrivingDirection() != car.getDirection().value()) {
+					System.out.println("Car[id=" + car.getId() + "] " + "wrong direction. expected " + car.getDirection().value() + " but was " + nextRoxel.getDrivingDirection());
+					gs.write(nextRoxel);
+					continue;
+				}
+				break;
+			}
+			
 			nextRoxel.setCar(car);
 			
 			// write current car into nextRoxel
@@ -116,7 +130,7 @@ public class CarRunner implements Runnable {
 			currentRoxel = gs.takeById(Roxel.class, currentRoxel.getId());
 			currentRoxel.setCar(new EmptyCar());
 			if (currentRoxel.getDirection() == 10) {
-				currentRoxel.setDrivingDirection(DrivingDirection.TODECIDE);
+				currentRoxel.setDrivingDirection(Direction.TODECIDE.value());
 			}
 			gs.write(currentRoxel);			
 			currentRoxel = nextRoxel;

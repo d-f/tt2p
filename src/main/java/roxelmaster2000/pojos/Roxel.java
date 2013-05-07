@@ -24,18 +24,19 @@ public class Roxel implements Serializable {
     public Integer direction;
     
     // Allowed driving direction, cars return TODECIDE on junctions so traffic lights can decide
-    public DrivingDirection drivingDirection;
+    public Integer drivingDirection;
     
 	public Roxel() {
 		super();
 	}
 
     @SpaceIndex
-    public DrivingDirection getDrivingDirection() {
+    public Integer getDrivingDirection() {
 		return drivingDirection;
 	}
 
-	public void setDrivingDirection(DrivingDirection drivingDirection) {
+	public void setDrivingDirection(Integer drivingDirection) {
+		assert(drivingDirection == Direction.SOUTH.value() || drivingDirection == Direction.EAST.value() || drivingDirection == Direction.TODECIDE.value());
 		this.drivingDirection = drivingDirection;
 	}
 

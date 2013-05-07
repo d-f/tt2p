@@ -97,7 +97,7 @@ public class CarRunner implements Runnable {
 
 			// drive through roxel
 			System.out.println("Car[id=" + car.getId() + "] " + " Drive through roxel: " + currentRoxel.getX() + ":" + currentRoxel.getY());
-			sleep(140);
+			sleep(1200);
 
 
 			Roxel nextRoxelTemplate = nextRoxel();
@@ -129,7 +129,7 @@ public class CarRunner implements Runnable {
 			gs.write(nextRoxel);
 			
 			// drive into next roxel
-			sleep(60);
+			sleep(600);
 			
 			// write empty car into current roxel
 			currentRoxel = gs.takeById(Roxel.class, currentRoxel.getId());

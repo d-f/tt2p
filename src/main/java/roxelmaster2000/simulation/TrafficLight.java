@@ -21,17 +21,33 @@ public class TrafficLight implements Runnable {
 	public TrafficLight(GigaSpace gs, Structure struct) {
 		this.gs = gs;
 		this.struct = struct;
-		foresight = 1;
+		foresight = 5;
+	}
+	
+	public int preview(Roxel r, boolean directionSouth) {
+		int count = 0;
+		
+		for (int n = 1; n < foresight; n++) {
+			Roxel previewTemplate = new Roxel();
+			previewTemplate.setX(((r.getX() + struct.width) - (directionSouth ? 0 : n)) % struct.width);
+			previewTemplate.setY(((r.getY() + struct.height) - (!directionSouth ? 0 : n)) % struct.height);
+			Roxel preview = null;
+			while (preview == null) {
+				preview = gs.read(previewTemplate);
+				CarRunner.sleep(33);
+				if (preview == null) {
+					System.out.println("Missing roxel, above " + r + ": " + previewTemplate);
+				}
+			}
+			if (!preview.getCar().getEmpty()) {
+				count++;
+			}
+		}
+		return count;
 	}
 	
 	public Roxel eventListener(Roxel r) {
-//		if (carQueueLenNorth > carQueueLenWest) {
-//			r.setDrivingDirection(Direction.EAST.value());
-//		} else if (carQueueLenNorth < carQueueLenWest) {
-//			r.setDrivingDirection(Direction.SOUTH.value());
-//		} else {
-//			r.setDrivingDirection(rnd.nextBoolean() ? Direction.SOUTH.value() : Direction.EAST.value());
-//		}
+		/*
 		Roxel leftTemplate = new Roxel();
 		leftTemplate.setX((r.getX() + struct.width - 1) % struct.width);
 		leftTemplate.setY(r.getY());
@@ -63,6 +79,18 @@ public class TrafficLight implements Runnable {
 			r.setDrivingDirection(Direction.EAST.value());
 		} else if (above.car.getEmpty() == false) {
 			r.setDrivingDirection(Direction.SOUTH.value());
+		}
+		*/
+		
+		int carsFromNorth = preview(r, true);
+		int carsFromWest = preview(r, false);
+		
+		//System.out.println("Preview for " + r + ": " + carsFromWest + " : " + carsFromNorth);
+		
+		if (carsFromNorth > carsFromWest) {
+			r.setDrivingDirection(Direction.SOUTH.value());
+		} else if (carsFromNorth < carsFromWest) {
+			r.setDrivingDirection(Direction.EAST.value());
 		}
 		
 		//r.setDrivingDirection(rnd.nextBoolean() ? Direction.SOUTH.value() : Direction.EAST.value());
